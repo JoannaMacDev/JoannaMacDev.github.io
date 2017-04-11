@@ -71,11 +71,11 @@ public protocol UITextFieldDelegate : NSObjectProtocol
   optional public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool
   optional public func textFieldDidBeginEditing(_ textField: UITextField)
   optional public func textFieldShouldEndEditing(_ textField: UITextField) -> Bool
-    optional public func textFieldDidEndEditing(_ textField: UITextField)
-    optional public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason)
-    optional public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool
-    optional public func textFieldShouldClear(_ textField: UITextField) -> Bool
-    optional public func textFieldShouldReturn(_ textField: UITextField) -> Bool
+  optional public func textFieldDidEndEditing(_ textField: UITextField)
+  optional public func textFieldDidEndEditing(_ textField: UITextField, reason: UITextFieldDidEndEditingReason)
+  optional public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool
+  optional public func textFieldShouldClear(_ textField: UITextField) -> Bool
+  optional public func textFieldShouldReturn(_ textField: UITextField) -> Bool
 }
 ```
 
