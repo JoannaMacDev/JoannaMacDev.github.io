@@ -133,7 +133,7 @@ public class SimpleDelegate : NameChangeDelegate
 }
 ```
 
-At a quick glance, all seems well but, on further inspection, we find that the sender parameter is **id** (Objective-C) or **Any** (Swift); so, when we implement the method in the delegate object, we have no indication of the real type of the sender and no easy way of inspecting its contents; at least without a massive series of `if let sender = sender as? …` statements, a swith statement, or similar.
+At a quick glance, all seems well but, on further inspection, we find that the sender parameter is **id** (Objective-C) or **Any** (Swift); so, when we implement the method in the delegate object, we have no indication of the real type of the sender and no easy way of inspecting its contents; at least without a massive series of `if let sender = sender as? …` statements, a switch statement, or similar.
 
 ##### So, how about using generics?
 
