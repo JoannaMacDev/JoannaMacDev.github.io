@@ -276,6 +276,12 @@ We don't actually need to use this typealias in this example, but it can be usef
 
 Next, we need to define the **event** type that is part of the NotifyPropertyChangedProtocol; this is a generic type that will work with any "args" class derived from EventArgs; it will allow us to add multiple closures and, when invoked, will call all of those closures in turn.
 
+We use an EventClosure<senderT, argsT : EventArgs> typealias, which is totally generic, for the closure type, but equally supports the passing of the, more specialised, PropertyChangedEventClosure<senderT> closure, specific to our example.
+
+```swift
+public typealias EventClosure<senderT, argsT : EventArgs> = (senderT, argsT) -> ()
+```
+
 ```swift
 // MARK: operator overloads
 
@@ -347,12 +353,6 @@ public class Event<senderT, argsT : EventArgs>
 We pass a reference to the the containing "subject" to the initialiser, so that we can hold onto it to pass to the closures when they are called.
 
 The only peculiar part of this class is that, to find which closure to remove, we have to bridge the array of closures to NSArray, in order to use index(of:_) method.
-
-You will notice that we use an EventClosure<senderT, argsT : EventArgs> typealias, which is totally generic, for the closure type, but supports the passing of a PropertyChangedEventClosure<senderT> closure, which is specific to our example.
-
-```swift
-public typealias EventClosure<senderT, argsT : EventArgs> = (senderT, argsT) -> ()
-```
 
 ### Putting the Event to Work
 
