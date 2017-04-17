@@ -231,7 +231,7 @@ I'm borrowing the INotifyPropertyChanged interface (protocol) from C#, as an exa
 ```swift
 public protocol NotifyPropertyChangedProtocol
 {
-  var propertyChanged: Event<Self, PropertyChangedEventArgs> { get set }
+  var propertyChanged: Event<Self, PropertyChangedEventArgs> { get }
 }
 ```
 
@@ -285,21 +285,21 @@ public typealias EventClosure<senderT, argsT : EventArgs> = (senderT, argsT) -> 
 ```swift
 // MARK: operator overloads
 
-public func +=<senderT, argsT>(_ event: inout Event<senderT, argsT>, handler: @escaping EventClosure<senderT, argsT>)
+public func +=<senderT, argsT>(_ event: inout Event<senderT, argsT>, closure: @escaping EventClosure<senderT, argsT>)
 {
-  event.add(handler)
+  event.add(closure)
 }
 
-public func -=<senderT, argsT>(_ event: inout Event<senderT, argsT>, handler: @escaping EventClosure<senderT, argsT>)
+public func -=<senderT, argsT>(_ event: inout Event<senderT, argsT>, closure: @escaping EventClosure<senderT, argsT>)
 {
-  event.remove(handler)
+  event.remove(closure)
 }
 
 public class Event<senderT, argsT : EventArgs>
 {
   // MARK: private properties
   
-  private lazy var eventHandlers: [EventClosure<senderT, argsT>] =
+  private lazy var eventClosures: [EventClosure<senderT, argsT>] =
   {
     return [EventClosure<senderT, argsT>]()
   }()
@@ -308,27 +308,27 @@ public class Event<senderT, argsT : EventArgs>
   
   // MARK: - fileprivate methods, accessible from the operator overloads in this file
   
-  fileprivate func add(_ handler: @escaping EventClosure<senderT, argsT>)
+  fileprivate func add(_ closure: @escaping EventClosure<senderT, argsT>)
   {
-    eventHandlers.append(handler)
+    eventClosures.append(closure)
   }
   
-  fileprivate func remove(_ handler: @escaping EventClosure<senderT, argsT>)
+  fileprivate func remove(_ closure: @escaping EventClosure<senderT, argsT>)
   {
     // required to access index(of:_)
-    guard let eventHandlersAsNSArray = eventHandlers as NSArray? else
+    guard let eventClosuresAsNSArray = eventClosures as NSArray? else
     {
       return
     }
     
-    let index = eventHandlersAsNSArray.index(of: handler)
+    let index = eventClosuresAsNSArray.index(of: closure)
     
     guard index != NSNotFound else
     {
       return
     }
     
-    let _ = eventHandlers.remove(at: index)
+    let _ = eventClosures.remove(at: index)
   }
   
   // MARK: - contructors
@@ -342,9 +342,9 @@ public class Event<senderT, argsT : EventArgs>
   
   public func invoke(with args: inout argsT)
   {
-    for eventHandler in eventHandlers
+    for eventClosure in eventClosures
     {
-      eventHandler(sender, args)
+      eventClosure(sender, args)
     }
   }
 }
@@ -353,6 +353,8 @@ public class Event<senderT, argsT : EventArgs>
 We pass a reference to the the containing "subject" to the initialiser, so that we can hold onto it to pass to the closures when they are called.
 
 The only peculiar part of this class is that, to find which closure to remove, we have to bridge the array of closures to NSArray, in order to use index(of:_) method.
+
+###### Warning! It is currently impossible to compare closures and, thus impossible to implement the -= operator, and its accompanying remove method, in a way that actually does anything. I hope, either this will change, or I will find a workaround and publish it.
 
 ### Putting the Event to Work
 
