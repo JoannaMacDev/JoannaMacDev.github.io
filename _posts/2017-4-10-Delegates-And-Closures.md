@@ -45,7 +45,7 @@ NotificationCenter code is performed synchronously, unless a NotificationQueue i
 
 ### Delegates - pros & cons
 
-The Apple idea of delegates has its roots in Objective-C and is very simplistic - e.g.
+The Apple idea of a delegate has its roots in Objective-C and is very simplistic - e.g.
 
 *Objective-C*
 ```objectivec
@@ -79,7 +79,7 @@ public protocol UITextFieldDelegate : NSObjectProtocol
 }
 ```
 
-Every method contains a parameter that represents the delegating object and, optionally, parameters that provide additional information about the action that is being observed by the delegate.
+Every method contains a parameter that represents the delegating object and, optionally, further parameters that provide additional information about the action that is being observed by the delegate.
 
 Some methods expect a value to be returned (in this case mainly a boolean indicating whether the action should occur or not. the rest are informational and tell us when something has happened.
 
@@ -89,9 +89,11 @@ Every method passes the **sender** as its first parameter, allowing us to know i
 
 ##### Cons
 
-This protocol is explicitly designed, only for use with UITextField, as are most such protocols - only designed as a delegate for one specific type
+As with most UI delegate protocols, this protocol is explicitly designed only for one subject type: UITextField. But it is possible to create delegate protocols that are designed to react to more than one subject type.
 
 ### Roll-your-own Delegates
+
+Let's take the simple example of the requirement to notify observing objects of the change of name of a subject object.
 
 *Objective-C*
 ```objectivec
@@ -133,11 +135,11 @@ public class SimpleDelegate : NameChangeDelegate
 }
 ```
 
-At a quick glance, all seems well but, on further inspection, we find that the sender parameter is **id** (Objective-C) or **Any** (Swift); so, when we implement the method in the delegate object, we have no indication of the real type of the sender and no easy way of inspecting its contents; at least without a massive series of `if let sender = sender as? …` statements, a switch statement, or similar.
+At a quick glance, all seems well but, on further inspection, we find that the sender parameter is of type **id** (Objective-C) or **Any** (Swift); so, when we implement the method in the delegate object, we have no indication of the real type of the sender and no easy way of inspecting its contents; at least not without a massive series of `if let sender = sender as? …` statements, a switch statement, or similar.
 
 ##### So, how about using generics?
 
-Objective-C doesn't yet have first-class generics, so there is not much more we can do, apart from trying to determine the type of the sender in the implementing delegate method
+Objective-C doesn't yet have first-class generics so, in Objective-C, there is not much more we can do, apart from trying to determine the type of the sender in the implementing delegate method
 
 However, since this article is primarily about Swift coding, and Swift does give us generics, can't we simply define an associated type in the protocol and use that for the sender parameter?
 
@@ -180,7 +182,18 @@ public class SimpleDelegate : NameChangeDelegate // error : Type 'SimpleDelegate
 }
 ```
 
-In a word, Aaaarrrgghhh!!!. What this essentially boils down to is that we have to know the real type of the sender wherever it is used, even though we were hoping, as a generic type, it could be inferred. So, we end up with all sorts of convoluted code (known as **type erasure** to get the SimpleSubject class to compile; something like this…
+We could try avoiding the associated type by specifying Self for the sender's type…
+
+```swift
+public protocol NameChangeDelegate
+{
+  func nameDidChange(sender: Self, name: String?)
+}
+```
+
+… indicating that the sender is always of the type. And this would work fine but, as soon as we implement the protocol, we get an error stating that the implementing class must be declared as final, which may be convenient if we are not going to ever derive from the implementing class but, if we are dealing with the base class of a hierarchy, it's back to using an associated type.
+
+In a word, Aaaarrrgghhh!!!. What this essentially boils down to is that, with an associated type, Swift needs to know the real type of the sender wherever it is used, even though we were hoping, as a generic type, it could be inferred. So, we end up with all sorts of convoluted code (known as **type erasure**) to get the SimpleSubject class to compile; something like this…
 
 ```swift
 public class NameChangeDelegateWrapper<delegateT : NameChangeDelegate>
@@ -231,11 +244,13 @@ I'm borrowing the INotifyPropertyChanged interface (protocol) from C#, as an exa
 ```swift
 public protocol NotifyPropertyChangedProtocol
 {
-  var propertyChanged: Event<Self, PropertyChangedEventArgs> { get }
+  associated type SenderType
+
+  var propertyChanged: Event<SenderType, PropertyChangedEventArgs> { get }
 }
 ```
 
-We pass Self as the first generic parameter to the Event<senderT, argsT> type because the sender type will always be the implementing type for this protocol.
+We have to declare the SenderType associated type and use that as the first generic parameter to the Event<senderT, argsT> type because, although it would be nice to say that the sender type will always be the implementing type for this protocol; it would also mean that any implementing class would have to be marked as final.
 
 Now we need to fill in the types used within the protocol; let's start with a base parameterless class that can be derived from, for use as the **args** object that will get passed to the closures…
 
@@ -262,15 +277,15 @@ public class PropertyChangedEventArgs : EventArgs
 }
 ```
 
-Instances of this class will hold the name of the property within the subject that has changed. The `allProperties` static let is to allow us to use an instance of this class, with no name, to indicate that more than one property has changed; thus indicating that we need to examine the whole object to determine what has changed. We could also change the initialiser to take an array of Strings instead, an empty array indicating all properties had changed.
+Instances of this class will hold the name of the property within the subject that has changed. The `allProperties` static let is to allow us to use an instance of this class, with no name, to indicate that more than one property has changed; thus indicating that we need to examine the whole object to determine what has changed. We could also change the initialiser to take an array of Strings instead; an empty array indicating all properties had changed.
 
-The next thing we are going to need is a type of closure that will handle the change:
+The next thing we can declare is the type of closure that will handle the change:
 
 ```swift
 public typealias PropertyChangedEventClosure<senderT> = (senderT, PropertyChangedEventArgs) -> ()
 ```
 
-We don't actually need to use this typealias in this example, but it can be useful to see what the parameter types should be when we come to add a closure to handle the event.
+We don't actually need to use this typealias in this example, but it can be useful to remind us of what the parameter types should be when we come to add a closure to handle the event.
 
 #### The Main Event
 
@@ -315,7 +330,7 @@ public class Event<senderT, argsT : EventArgs>
   
   fileprivate func remove(_ closure: @escaping EventClosure<senderT, argsT>)
   {
-    // required to access index(of:_)
+    // required to access index(of:_) because a closure is not Hashable
     guard let eventClosuresAsNSArray = eventClosures as NSArray? else
     {
       return
@@ -352,9 +367,13 @@ public class Event<senderT, argsT : EventArgs>
 
 We pass a reference to the the containing "subject" to the initialiser, so that we can hold onto it to pass to the closures when they are called.
 
-The only peculiar part of this class is that, to find which closure to remove, we have to bridge the array of closures to NSArray, in order to use index(of:_) method.
+###### Warning! Removing closures from an array doesn't work
 
-###### Warning! It is currently impossible to compare closures and, thus impossible to implement the -= operator, and its accompanying remove method, in a way that actually does anything. I hope, either this will change, or I will find a workaround and publish it.
+The only peculiar part of this class is that, to access the remove method of the array, we have to bridge the array of closures to NSArray, in order to use index(of:_) method.
+
+This is because closures are not Hashable and Swift is smart enough to make it difficult to access the index(of:_) method of Array<T>.
+
+So, currently, it is impossible to compare closures and, thus impossible to implement the -= operator, and its accompanying remove method, in a way that actually does anything. I hope this will change in future versions of the Swift compiler but, there is a workaround, which I will publish in another article.
 
 ### Putting the Event to Work
 
@@ -380,14 +399,16 @@ public class TestSubject : NotifyPropertyChangedProtocol
 }
 ```
 
-The event is best held in a lazy var; it would not be possible to pass self to the event's initialiser, inside the subject's initialiser, due to self not having being fully initialised because the event has not yet been initialised (otherwise known as a Catch 22 situation)
+The event is best held in a lazy var; mainly because it is not possible to pass self to the event's initialiser, inside the subject's initialiser, due to self not having being fully initialised because the event has not yet been initialised (otherwise known as a Catch 22 situation)
 
 Finally, for the subject class, we add an example property and use its didSet block to call the propertyChanged event.
 
-Now we can create a test delegate class that contains a closure that matches the signature of the `PropertyChangedEventClosure<senderT>` typealias that we declared earlier.
+### The "Observing" Object
+
+Now we can create a test class that contains a closure that matches the signature of the `PropertyChangedEventClosure<senderT>` typealias that we declared earlier, which we can "connect" to the propertyChanged event in the subject
 
 ```swift
-public class TestDelegate
+public class TestClass
 {
   func handlePropertyChanged(sender: TestSubject, args: PropertyChangedEventArgs)
   {
@@ -402,18 +423,38 @@ Finally, we can write some test code…
 
 ```swift
 {
-  let testDelegate = TestDelegate()
+  let testObject = TestClass()
   
   let testSubject = TestSubject()
   
-  testSubject.propertyChanged += testDelegate.handlePropertyChanged
+  testSubject.propertyChanged += testObject.handlePropertyChanged
   
   testSubject.name = "Swift"
 }
 ```
 
+It is equally possible that we could handle the event with an anonymous closure, in place, rather than in another object…
+
+```swift
+{
+  let testSubject = TestSubject()
+  
+  testSubject.propertyChanged +=
+  {
+    sender, args in
+    
+    print("\"\(sender.name)\" has been assigned to \(args.propertyName ?? "no property name")")
+  }
+  
+  testSubject.name = "Swift"
+}
+```
+
+
 ## Conclusion
 
-And there you have it. a system that allows you to create any concrete class and add the ability to observe changes to instances of that type. The TestDelegate could also be declared as a struct and, with a few subtle tweaks to the TestSubject code, it too could be implemented as structs.
+And there you have it. a system that allows you to create any concrete class and add the ability to observe changes to instances of that type. The TestDelegate could also be declared as a struct and, with a few subtle tweaks to the TestSubject code, it too could be implemented as a struct.
 
 Here we are only concerned with the NotifyPropertyChangedProtocol but, the principle can be used to call closures for any reason. It is perfectly feasible to add multiple events to a type and add multiple closures from multiple delegate types.
+
+###### A fix for the problem of removing closures will follow in another article.
