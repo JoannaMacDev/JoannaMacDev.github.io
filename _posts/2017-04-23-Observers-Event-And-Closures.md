@@ -134,7 +134,7 @@ extension TextFieldEventClosureType : Hashable
 
 **Note:** Swift doesn't allow enums to be "RawRepresentable" and to also have associated values, which is why we have had to implement Hashable by returning an Int value for each of the cases.
 
-###### TextField Events
+##### TextField Events
 To give you some idea of how a more complex enum would be implemented, here is one designed to fulfil the needs of an imitation of the UITextFieldDelegate:
 
 ```swift
