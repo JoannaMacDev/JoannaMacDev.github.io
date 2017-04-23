@@ -132,8 +132,9 @@ extension TextFieldEventClosureType : Hashable
 }
 ```
 
-**Note:** Swift doesn't allow enums to be "RawRepresentable" and to also have associated values, which is why we have had to implement Hashable by returning an Int value for each of the cases. 
+**Note:** Swift doesn't allow enums to be "RawRepresentable" and to also have associated values, which is why we have had to implement Hashable by returning an Int value for each of the cases.
 
+###### TextField Events
 To give you some idea of how a more complex enum would be implemented, here is one designed to fulfil the needs of an imitation of the UITextFieldDelegate:
 
 ```swift
@@ -407,7 +408,7 @@ Using a closure in the code that links the subject, instead of a method in anoth
 
 ### Next…
 
-If you look at the [TextFieldEventClosureType](UITextFieldDelegate) code, you will see that there are seven events, all of which we might want capture in a single object. In the next article, I intend to show how we can create a delegate mechanism that will allow us to add a single object as delegate for all those events in one line of code.
+If you look at the [TextFieldEventClosureType](#textfield-events) code, you will see that there are seven events, all of which we might want capture in a single object. In the next article, I intend to show how we can create a delegate mechanism that will allow us to add a single object as delegate for all those events in one line of code.
 
 
 
