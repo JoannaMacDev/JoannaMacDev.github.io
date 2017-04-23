@@ -284,7 +284,7 @@ public class Event<closureT : Closure, argsT : EventArgs>
 
 The Event type still has two generic type parameters but, this time, we use the closureT to determine the sender's type; the argsT type is still required for the `invoke(…)`method and it is not part of the closureT type.
 
-The **closure enums** are held in an array of `closureT`; because "closures" are now hidden inside an Equatable enum, they can now be both added and removed from the array; the sender is held in a private let; and the invoke method of the Event simply enumerates teh closure enums, calling the invoke(…) method on each in turn.
+The **closure enums** are held in an array of `closureT`; because "closures" are now hidden inside an Equatable enum, they can now be both added and removed from the array; the sender is held in a private let; and the invoke method of the Event simply enumerates the closure enums, calling the invoke(…) method on each in turn.
 
 ### The NotifyPropertyChanged Protocol
 
@@ -299,11 +299,11 @@ public protocol NotifyPropertyChanged
 }
 ```
 
-Notice the ClosureType associated type declaration, which will be replaced by an implementation of the Closure protocol. This is used as the first parameter to the Event<closureT, argsT> class and, in this example, we are using the PropertyChangedEventArgs type we discussed earlier, as the argsT replacement type.
+Notice the ClosureType associated type declaration, which will be replaced by a **closure enum** implementation of the Closure protocol. This is used as the first parameter to the Event<closureT, argsT> class and, in this example, we are using the PropertyChangedEventArgs type we discussed earlier, as the argsT replacement type.
 
 ### The Test Subject
 
-The test subject class is relatively unchanged, with only the parameter type to the Event being different.
+The test subject class is relatively unchanged, with only the parameter types to the Event being different.
 
 ```swift
 public class TestSubject : NotifyPropertyChanged
@@ -364,7 +364,7 @@ public class TestClass
 }
 ```
 
-Although, one thing I didn't mention last time, was that you can create multiple methods with the same signature, but with different sender parameter type; and Swift will allow this, overloading the method name to provide handling for as many, strictly typed, closures as you have types of subjects.
+Although, as you can see from this code, one thing I didn't mention last time, was that you can create multiple methods with the same signature, but with different sender parameter types; and Swift will allow this, overloading the method name to provide handling for as many, strictly typed, closures as you have types of subjects.
 
 ### Bringing Everything Together
 
@@ -404,7 +404,7 @@ To tie everything together, here is some test code that creates an instance of T
 }
 ```
 
-Using a closure in the code that links the subject, instead of a method in another object, means that we can capture information from the enclosing type, which can sometimes be very useful if we need to refer to that information in order to do validation at the time of closure execution; although this scenario applies more to args types that contain vars that can be altered to provide feedback to the subject type.
+Using a closure, instead of a method in another object, in the code that links the subject, means that we can capture information from the enclosing type, which can sometimes be very useful if we need to refer to that information in order to do validation at the time of closure execution; although this scenario applies more to args types that contain vars that can be altered to provide feedback to the subject type.
 
 ### Next…
 
