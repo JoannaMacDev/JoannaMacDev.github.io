@@ -5,7 +5,7 @@ title: Observers, Events and Closures
 
 ### Introduction
 
-In my last post ([Delegates vs Closures in Swift](https://joannamacdev.github.io/Delegates-And-Closures/)), I mentioned that there were problems in removing closures from arrays. This post is the first in a small series, describing an implementation of the **Observer Pattern** as a system of events and closures. It will also cover an interesting approach to implementing delegates.
+In my last post ([Delegates vs Closures in Swift]({{ site.baseurl }}{% link _posts/2017-04-23-Observers-Event-And-Closures.md %})), I mentioned that there were problems in removing closures from arrays. This post is the first in a small series, describing an implementation of the **Observer Pattern** as a system of events and closures. It will also cover an interesting approach to implementing delegates.
 
 Instead of relying on my previous article as a starting point, I intend to start again from scratch, as there are several changes, even to the most fundamental of types and associated code.
 
