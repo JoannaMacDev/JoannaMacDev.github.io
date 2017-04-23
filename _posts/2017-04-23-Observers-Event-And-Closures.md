@@ -98,7 +98,7 @@ The essence of this enum is the list of cases; in this simple example, there is 
 
 The senderT type parameter is necessary for this closure type, because the `NotifyPropertyChanged` protocol can be implemented by virtually any type.
 
-We declare the `didChange` case with an associated value of the type that matches the closure signature associated with the `propertyChanged` event in the `NotifyPropertyChanged` protocol.
+We declare the `didChange` case with an associated value of the type that matches the closure signature associated with the `propertyChanged` event in the [NotifyPropertyChanged](#the-notifypropertychanged-protocol) protocol.
   
 ```swift
   …
