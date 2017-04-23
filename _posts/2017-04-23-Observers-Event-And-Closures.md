@@ -407,7 +407,7 @@ Using a closure in the code that links the subject, instead of a method in anoth
 
 ### Next…
 
-If you look at the [TextFieldEventClosureType](#UITextFieldDelegate) code, you will see that there are seven events, all of which we might want capture in a single object. In the next article, I intend to show how we can create a delegate mechanism that will allow us to add a single object as delegate for all those events in one line of code.
+If you look at the [TextFieldEventClosureType](UITextFieldDelegate) code, you will see that there are seven events, all of which we might want capture in a single object. In the next article, I intend to show how we can create a delegate mechanism that will allow us to add a single object as delegate for all those events in one line of code.
 
 
 
