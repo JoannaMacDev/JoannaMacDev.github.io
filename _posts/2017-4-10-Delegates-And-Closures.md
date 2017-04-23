@@ -250,7 +250,7 @@ public protocol NotifyPropertyChangedProtocol
 }
 ```
 
-We have to declare the SenderType associated type and use that as the first generic parameter to the Event<senderT, argsT> type because, although it would be nice to use Self to indicate that the sender type will always be the implementing type for this protocol; it would also mean that any implementing class would have to be marked as final.
+We have to declare the SenderType associated type and use that as the first generic parameter to the Event<senderT, argsT> type because, although it would be nice to say that the sender type will always be the implementing type for this protocol; it would also mean that any implementing class would have to be marked as final.
 
 Now we need to fill in the types used within the protocol; let's start with a base parameterless class that can be derived from, for use as the **args** object that will get passed to the closures…
 
