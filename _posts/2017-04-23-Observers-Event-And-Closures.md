@@ -29,7 +29,7 @@ public protocol EventArgs { }
 public struct EmptyArgs : EventArgs { }
 ```
 
-Then, for those closures which don't require any parameters, we have a simple, empty struct that implements the EventArgs protocol.
+Then, for those closures which don't require any parameters, we have a simple, empty, struct that implements the EventArgs protocol.
 
 ### A Base Closure Protocol
 
@@ -119,7 +119,7 @@ The `invoke(…)`method in this example might seem a bit overly complicated, wit
 Since the args parameter is passed in as a generic argsT type, we need to explicitly cast it to the correct type for the closure associated with this case.
 
 ```swift
-extension TextFieldEventClosureType : Hashable
+extension PropertyChangeClosureType : Hashable
 {
   public var hashValue: Int
   {
@@ -288,7 +288,7 @@ The **closure enums** are held in an array of `closureT`; because "closures" are
 
 ### The NotifyPropertyChanged Protocol
 
-Now we have all the required types in place, we can move on to create the NotifyPropertyChanged protocol that we can implement on any type, of which we wish to observe property changes.
+Now we have all the required types in place, we can move on to create the NotifyPropertyChanged protocol that we can implement on any type, for which we wish to observe property changes.
 
 ```swift
 public protocol NotifyPropertyChanged
@@ -299,7 +299,7 @@ public protocol NotifyPropertyChanged
 }
 ```
 
-Notice the ClosureType associated type declaration, which will be replaced by a **closure enum** implementation of the Closure protocol. This is used as the first parameter to the Event<closureT, argsT> class and, in this example, we are using the PropertyChangedEventArgs type we discussed earlier, as the argsT replacement type.
+Notice the ClosureType associated type declaration, which will be replaced by a **closure enum** implementation of the Closure protocol. This is used as the first parameter to the `Event<closureT, argsT>` class and, in this example, we are using the PropertyChangedEventArgs type we discussed earlier, as the argsT replacement type.
 
 ### The Test Subject
 
