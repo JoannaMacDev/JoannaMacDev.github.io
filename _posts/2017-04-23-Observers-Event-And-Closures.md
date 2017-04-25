@@ -409,31 +409,3 @@ Using a closure, instead of a method in another object, in the code that links t
 ### Next…
 
 If you look at the [TextFieldEventClosureType](#textfield-events) code, you will see that there are seven events, all of which we might want capture in a single object. In the next article, I intend to show how we can create a delegate mechanism that will allow us to add a single object as delegate for all those events in one line of code.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
