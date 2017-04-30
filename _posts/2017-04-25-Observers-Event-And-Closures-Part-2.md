@@ -58,7 +58,7 @@ As you can see, all this does is to iterate through the list of closures, adding
 
 The NotifyPropertyChanged protocol only has one event and, as described above, is relatively simple to implement, event though attaching multiple observers at one time is not that common.
 
-However, the real power of the [EventSource](*the-event-source) protocol becomes apparent when we implement it on the TextField example; let's start by defining a class to imitate UITextField for our example.
+However, the real power of the [EventSource](*the-event-source) protocol becomes apparent when we implement it on the TextField example; let's start by defining a class to imitate UITextField for our example (the code for TextFieldEventClosureType is in the first article).
 
 ```swift
 public class TextField
