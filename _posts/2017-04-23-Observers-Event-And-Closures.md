@@ -19,6 +19,18 @@ Two possibilities came to mind:
 
   * The second was (possibly) surprising; [an enum with an associated value](#enums-for-closures) for the closure.
 
+## Danger, Will Robinson!
+
+The solution using enums certainly allows the adding and removal of closures in an array but **only if you don't add more than one closure for each enum case**
+
+This is because, if you add more than one element of the same enum case, **index(of:_) will return the first element** that contains that enum case, which might not be the one you are looking for.
+
+In many situations, this may be acceptable and, therefore, the solution is valid.
+
+## Addendum
+
+Using wrapper structs actually works very well, at least at the expense of a slightly more complex syntax. An article on that technique will follow
+
 ### A Base Args Type
 
 In the previous article, we used a base EventArgs class and inherited other args classes from that but, in the spirit of **protocol oriented programming** that Swift encourages, we now have an empty protocol, which can be implemented by either a class or a struct.
