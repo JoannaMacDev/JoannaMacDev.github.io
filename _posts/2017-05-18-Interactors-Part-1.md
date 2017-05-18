@@ -32,7 +32,7 @@ public protocol InteractorProtocol
 }
 ```
 
-An Interactor can be in either an active or inactive state; in other words, we need to be able to be able to stop notifications happening from the Model to the View when we are updating the Model value from the View. Otherwise, we end up with a change in the View being propogated as a change to the Model, which propogates a notification to the View, which… You can guess where this ends up - infinite recursion!
+An Interactor can be in either an active or inactive state; in other words, we need to be able to stop notifications happening from the Model to the View when we are updating the Model value from the View. Otherwise, we end up with a change in the View being propogated as a change to the Model, which propogates a notification to the View, which… You can guess where this ends up - infinite recursion!
 
 There are instances when we might want to handle interactions on subviews within an Interactor that is managing the containing view. For example we might have a view representing a list of editable items, where we would want to be able to react to changes in the list (add/remove/move) as well as changes to any item in the list. Any nested interactors are activated or deactivated as and when the parent Interactor is activated or deactivated.
 
@@ -112,7 +112,7 @@ public protocol PropertyInteractorProtocol
 }
 ```
 
-This protocol declares that the Interactor needs to hold a reference to a subhect and to know what type that subject is, along with the name of the property to which we want to respond.
+This protocol declares that the Interactor needs to hold a reference to a subject and to know what type that subject is, along with the name of the property to which we want to respond.
 
 It also requires that we include a closure to respond the the NotifyPropertyChanged event.
 
@@ -160,7 +160,7 @@ Since, in this example, we want to be able to create instances of Interactors in
 
 NSObjectPropertyInteractor is marked as @IBDesignable because we want to be able to set the propertyName in IB, it derives from the base Interactor class and then mixes in the PropertyInteractorProtocol behaviour.
 
-The subject var is implemented as an @IBOutlet, in case we should want to create an object for the subject in the storyboard but this is not strictly necessary if you intend always to set the subject in code. Its type is specified as NSObject because we intend to use KVC's value(forKey:) and setValue(: forKey:) methods to update the subject's property values.
+The subject var is implemented as an @IBOutlet, in case we should want to create an object for the subject in the storyboard but this is not strictly necessary if you intend always to set the subject in code. Its type is specified as NSObject because we intend to use KVC's value(forKey:) and setValue(: forKey:) methods to get and update the subject's property values.
 
 The didSet block of the subject var calls a didSet(subject:) method that, at this level, hooks up the subject's NotifyPropertyChanged event to the interactor's propertyChangeClosure. Separating out this method from the closure will allow us to override it to add further behaviour in subclasses.
 
@@ -185,9 +185,9 @@ public protocol ViewInteractorProtocol
 }
 ```
 
-We need to hold on to a reference to the view; from the protocol's point of view, this property can be readonly, we will implement it as readwrite in the implementing class.
+We need to hold on to a reference to the view; from the protocol's point of view, this property can be readonly; although we will implement it as readwrite in the implementing class in order to be able to connect it to a view in IB.
 
-And we declare a requirement for a configureView() method to set up the view's initial state and an updateView() method to react when the interactor is notified of a change.
+Then we declare a requirement for a configureView() method to set up the view's initial state and an updateView() method to react when the interactor is notified of a change.
 
 ```swift
 extension ViewInteractorProtocol
@@ -238,13 +238,13 @@ We can add a default, empty, configureView() method in an extension to this prot
 }
 ```
 
-Once again, we create the class to be @IBDesignable and make the view var an @IBOutlet to facilitate using them in IB. The view's type is set to UILabel.
+Once again, we create the class to be @IBDesignable and make the view var an @IBOutlet to facilitate using it in IB. The view's type is set to UILabel.
 
-We override the didSet(subject:) method from NSObjectPropertyInteractor to add a call to the updateView() method, which is implemented to use a general mechanism for setting the text on the label to a string describing the value. There is no formatting at this point as this class is only really intended as a base class that would be expected to deal with string values by default.
+We override the didSet(subject:) method from NSObjectPropertyInteractor to add a call to the updateView() method, which is implemented here to use a general mechanism for setting the text on the label to a string describing the value. There is no formatting at this point as this class is only really intended as a base class that would be expected to deal with string values by default.
 
-Since we dispatch the property change notification on a background thread, we need to update the UI on the main thread in the propertyDidChange method, but only if the interactor is active; otherwise we could end up with an infinite recursion.
+Since the NotifyPropertyChanged event dispatches the property change notification on a background thread, we need to update the UI on the main thread in the propertyDidChange method, but only if the interactor is active; otherwise we could end up with an infinite recursion.
 
-###Putting It All Together
+### Putting It All Together
 
 ##### The Test Class
 
@@ -289,15 +289,15 @@ class TestViewController : UIViewController
 }
 ```
 
-I have added a @IBOutlet collection so that we can talk to any label interactors on the view and set their subject property in the viewDidLoad() method
+I have added an @IBOutlet collection so that we can talk to any label interactors on the view and set their subject property in the viewDidLoad() method
 
 The button's @IBAction simply sets the name property on the Person. But that is all the code you need in the view controller.
 
-You might think that it is hardly worth the effort to create an interactors for this scenario but, when we move on to integer and decimal properties, the saving in boilerplate code becomes significant.
+You might think that it is hardly worth the effort to create an interactor for this scenario but, when we move on to integer and decimal properties, the saving in boilerplate code becomes significant.
 
-##### The storyboard
+##### The Storyboard
 
-On your view controller, set its class to TestViewController, place an NSObject on it and set its class to LabelInteractor.
+In IB, create a view controller and set its class to TestViewController; then place an NSObject on it and set its class to LabelInteractor.
 
 ![Setting the Property Name]({{ site.url }}/images/SetName.png)
 
@@ -311,10 +311,12 @@ From the view controller, drag to add the interactor to the labelInteractors out
 
 Then drag from the interactor to the label to connect the view outlet.
 
-Connect the button to its IBAction in the view controller and that's about all you need to do.
+Connect the button to its IBAction in the view controller and that's about all you should need to do.
 
 ### Summary
 
-So there you have a simple example of how an Interactor can be used to remove code from a view controller. So far, we haven't really saved that much effort but, when it comes to handling numeric properties, along with their formatting, the advantages soon mount up.
+So there you have a simple example of how an Interactor can be used to remove boilerplate code from a view controller. So far we haven't really saved that much effort but, when it comes to handling numeric properties, along with their formatting, the advantages soon mount up.
+
+And when you need something like credit card entry or hexadecimal numbers, it starts to make even more sense.
 
 I'm keeping these articles short(ish) because there's quite a lot to take in overall. The next article will carry on from here and discuss connecting labels to numeric value properties, along with their formatting.
