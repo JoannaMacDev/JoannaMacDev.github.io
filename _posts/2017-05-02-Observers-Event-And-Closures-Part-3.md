@@ -294,22 +294,3 @@ Now that we have a "fully functioning" multi-subject, multi-observer NotifyPrope
 The next article will look at simplifying the setting up of a UITextField for editing tricky things, like decimal numbers.
 
 We'll do this by providing an Interactor to "connect" the text field to a property on an object; the idea being that: keystrokes can be validated, the property will be updated as soon as it is edited in the text field, and the text field will be updated when the property is changed on the object; you could think of it like bindings from AppKit but that work with UIKit as well
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
