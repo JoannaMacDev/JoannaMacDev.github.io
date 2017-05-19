@@ -170,7 +170,7 @@ We implement the propertyChangeClosure var as a lazy var whose closure responds 
 
 ### Connecting to a View
 
-Before we move on to reacting to and validating user gestures in controls, let's create a simple interactor that will automatically update a UILabel when a property value changes:
+Before we move on to reacting to and validating user gestures in controls, let's create a simple interactor that will automatically update a UILabel when a property value changes. Of course, the principles do not just apply to UILabels; we could equally use similar code for any UIView subclass.
 
 ```swift
 public protocol ViewInteractorProtocol
@@ -196,7 +196,7 @@ extension ViewInteractorProtocol
 }
 ```
 
-We can add a default, empty, configureView() method in an extension to this protocol to save us having to add an empty one in any derived class that doesn't need to do anything.
+We can add a default, empty, configureView() method in an extension to this protocol to save us having to add an empty one in any derived class that doesn't need to do any initial configuration.
 
 ### A Label Interactor
 
