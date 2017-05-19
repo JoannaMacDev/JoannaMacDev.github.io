@@ -102,6 +102,6 @@ Again, we need to handle the possibility of nil values, in the same way that we 
 
 ### Summary
 
-All in all, displaying of numeric values is a relatively simple matter and it could still be argued that interactors could be excessive, apart fromt eh fact that they do allow us to encapsulate the code that reacts to property value changes and the formatting of text in one, easily reusable, object.
+All in all, displaying of numeric values is a relatively simple matter and it could still be argued that interactors could be excessive, apart from the fact that they do allow us to encapsulate the code that reacts to property value changes and the formatting of text in one, easily reusable, object.
 
 Coming next, the ever so slightly more complex matter of validating keystrokes, copying, pasting, etc of numeric values as they are entered into a UITextField.
