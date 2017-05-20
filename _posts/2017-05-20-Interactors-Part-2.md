@@ -274,7 +274,7 @@ The DefaultValue protocol is not strictly necessary for types like Int, Double, 
 
 ### An Integer Control Interactor
 
-Because classes that handle control interaction can be quite complex, I will split the code for the IntegerControlInteractor into sections, commenting on each section in turn.
+Because classes that handle control interaction can be quite complex, I will split the code for the IntegerTextFieldInteractor into sections, commenting on each section in turn.
 
 ```swift
 @IBDesignable public class IntegerTextFieldInteractor : TextFieldInteractor
@@ -458,6 +458,7 @@ I have added comments inline to try to explain what is going on.
     
     return true
   }
+}
 ```
 
 ### Summary
