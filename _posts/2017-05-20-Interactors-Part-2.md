@@ -304,7 +304,7 @@ Because classes that handle control interaction can be quite complex, I will spl
   …
 ```
 
-We start by adding further configuration to the text field, by disabling spell-checking and auto-correction and setting the text alignemt to the right.
+We start by adding further configuration to the text field, by disabling spell-checking and auto-correction and setting the text alignment to the right.
 
 For the updateView() method, because we are dealing only with integers and the characters in the text will already have been validated, possibly the simplest way to provide a textual representation of the, possibly optional, property value was to use the extension to Optional enum described above. 
 
