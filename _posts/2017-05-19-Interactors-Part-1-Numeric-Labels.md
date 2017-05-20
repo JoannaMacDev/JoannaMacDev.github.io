@@ -38,9 +38,9 @@ All we need to do with this interactor is to override the updateView() method to
 
 It is important to realise that, in some classes, there is no default value for some properties, apart from nil.
 
-Because we are using NSObject's value(forKey:) method to retrieve the value, what we are receiving is actually an Optional<Any>. Therefore, we are using an `if case .some(let …)` to verify that there is a value and, if there is, to extract it. Then we simply need to force the cast from Any to Int and create a string from it.
+Because we are using NSObject's value(forKey:) method to retrieve the value, what we are receiving is actually an Optional&lt;Any&gt;. Therefore, we are using an `if case .some(let …)` to verify that there is a value and, if there is, to extract it. Then we simply need to force the cast from Any to Int and create a string from it.
 
-If the value is nil, then we can either display an empty string or, as I have suggested here, a sring that tells the user that the value is "nil". What we display will depend on what the user would be most likely to expect.
+If the value is nil, then we can either display an empty string or, as I have suggested here, a string that tells the user that the value is "nil". What we display will depend on what the user would be most likely to expect.
 
 ### A Decimal Label Interactor
 
