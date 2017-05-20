@@ -183,6 +183,7 @@ There may be other events that you would want to handle here, or even provide ta
 
 Because we want to be able to allow the use of optional properties in the subject object, I wanted to make it easy to provide a string to represent a optional property value, whether it contained a value or nil.
 
+```swift
 extension Optional : CustomStringConvertible
 {
   public var description: String
@@ -195,6 +196,7 @@ extension Optional : CustomStringConvertible
     return ""
   }
 }
+```
 
 This extension to the Optional enum mixes in the CustomStringConvertible protocol to provide a description property to any optional var. It simply checks whether the enum is `.some` and returns a string desribing the value or, if not, it returns an empty string.
 
