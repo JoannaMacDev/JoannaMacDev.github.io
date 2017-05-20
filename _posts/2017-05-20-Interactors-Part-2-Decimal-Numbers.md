@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Interactors - Part 2
+title: Interactors - Part 2 - Decimal Numbers
 ---
 
 ### Introduction
