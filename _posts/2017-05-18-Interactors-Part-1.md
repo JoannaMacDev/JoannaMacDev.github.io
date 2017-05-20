@@ -160,13 +160,13 @@ Since, in this example, we want to be able to create instances of Interactors in
 
 NSObjectPropertyInteractor is marked as @IBDesignable because we want to be able to set the propertyName in IB, it derives from the base Interactor class and then mixes in the PropertyInteractorProtocol behaviour.
 
-The subject var is implemented as an @IBOutlet, in case we should want to create an object for the subject in the storyboard but this is not strictly necessary if you intend always to set the subject in code. Its type is specified as NSObject because we intend to use KVC's value(forKey:) and setValue(: forKey:) methods to get and update the subject's property values.
+The subject var is implemented as an @IBOutlet, in case we should want to create an object for the subject in the storyboard but this is not strictly necessary if you intend always to set the subject in code. Its type is specified as NSObject because we intend to use KVC's value(forKey:) and setValue(\_: forKey:) methods to get and update the subject's property values.
 
 The didSet block of the subject var calls a didSet(subject:) method which, at this level of the hierarchy, hooks up the subject's NotifyPropertyChanged event to the interactor's propertyChangeClosure. Separating out this method from the closure will allow us to override it to add further behaviour in subclasses.
 
 The propertyName var is also marked as @IBInspectable to allow us to set it in the storyboard.
 
-We implement the propertyChangeClosure property as a lazy var whose closure responds to the event by calling the propertyDidChange(sender:\_args:\_) method if the propertyName in the args parameter matches that in the interactor. This method is empty at this level of the hierarchy, but will be overridden to react in a way appropriate to the type of model/view relationship a derived class is intended to handle.
+We implement the propertyChangeClosure property as a lazy var whose closure responds to the event by calling the propertyDidChange(sender:args:) method if the propertyName in the args parameter matches that in the interactor. This method is empty at this level of the hierarchy, but will be overridden to react in a way appropriate to the type of model/view relationship a derived class is intended to handle.
 
 ### Connecting to a View
 
@@ -242,7 +242,7 @@ However, the updateView() method is mandatory and its contents depend on where i
 
 Once again, we create the class to be @IBDesignable and make the view var an @IBOutlet to facilitate using it in IB. The view's type is set to UILabel.
 
-We override the didSet(subject:\_) method from NSObjectPropertyInteractor to add a call to the updateView() method, which is implemented here to use a general mechanism for setting the text on the label to a string describing the value. There is no formatting at this point as this class is only really intended as a base class that would be expected to deal with string values by default.
+We override the didSet(subject:) method from NSObjectPropertyInteractor to add a call to the updateView() method, which is implemented here to use a general mechanism for setting the text on the label to a string describing the value. There is no formatting at this point as this class is only really intended as a base class that would be expected to deal with string values by default.
 
 Since the NotifyPropertyChanged event dispatches the property change notification on a background thread, we need to update the UI on the main thread in the propertyDidChange method, but only if the interactor is active; otherwise we could end up with an infinite recursion.
 
