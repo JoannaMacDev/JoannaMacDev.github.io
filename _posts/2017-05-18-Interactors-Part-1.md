@@ -85,7 +85,7 @@ public class Interactor: NSObject
       interactor.deactivate()
     }
     
-    if let index = nestedInteractors.index(of: interactor)// (where: { return $0 === interactor } )
+    if let index = nestedInteractors.index(of: interactor)
     {
       nestedInteractors.remove(at: index)
     }
@@ -112,9 +112,9 @@ public protocol PropertyInteractorProtocol
 }
 ```
 
-This protocol declares that the Interactor needs to hold a reference to a subject and to know what type that subject is, along with the name of the property to which we want to respond.
+This protocol declares that the Interactor needs to hold a reference to a subject and needs to know what type that subject is, along with the name of the property to which we want to respond.
 
-It also requires that we include a closure to respond the the NotifyPropertyChanged event.
+It also requires that we include a closure to respond to the NotifyPropertyChanged event.
 
 Since, in this example, we want to be able to create instances of Interactors in a storyboard, our implementing class has to comply, not only to our own protocols, but also, to the requirements of IB's designers:
 
@@ -162,11 +162,11 @@ NSObjectPropertyInteractor is marked as @IBDesignable because we want to be able
 
 The subject var is implemented as an @IBOutlet, in case we should want to create an object for the subject in the storyboard but this is not strictly necessary if you intend always to set the subject in code. Its type is specified as NSObject because we intend to use KVC's value(forKey:) and setValue(: forKey:) methods to get and update the subject's property values.
 
-The didSet block of the subject var calls a didSet(subject:) method that, at this level, hooks up the subject's NotifyPropertyChanged event to the interactor's propertyChangeClosure. Separating out this method from the closure will allow us to override it to add further behaviour in subclasses.
+The didSet block of the subject var calls a didSet(subject:) method which, at this level of the hierarchy, hooks up the subject's NotifyPropertyChanged event to the interactor's propertyChangeClosure. Separating out this method from the closure will allow us to override it to add further behaviour in subclasses.
 
 The propertyName var is also marked as @IBInspectable to allow us to set it in the storyboard.
 
-We implement the propertyChangeClosure var as a lazy var whose closure responds to the event by calling the propertyDidChange method, which is empty at this level of the hierarchy, but will be overridden to react in a way appropriate to the type of model/view relationship a derived class is intended to handle.
+We implement the propertyChangeClosure property as a lazy var whose closure responds to the event by calling the propertyDidChange(::) method if the propertyName in the args parameter matches that in the interactor. This method is empty at this level of the hierarchy, but will be overridden to react in a way appropriate to the type of model/view relationship a derived class is intended to handle.
 
 ### Connecting to a View
 
@@ -197,6 +197,8 @@ extension ViewInteractorProtocol
 ```
 
 We can add a default, empty, configureView() method in an extension to this protocol to save us having to add an empty one in any derived class that doesn't need to do any initial configuration.
+
+However, the updateView() method is mandatory and its contents depend on where it is implemented, so we do not provide a default implementation in the protocol extension.
 
 ### A Label Interactor
 
