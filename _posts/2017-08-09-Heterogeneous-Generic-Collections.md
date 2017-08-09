@@ -199,7 +199,9 @@ After all this preparatory work, we can now write our code to traverse a heterog
     
     let intThing = Thing<Int>(value: 123)
     
-    let items: [Visitable] = [stringThing, intThing]
+    let floatThing = Thing<Float>(value: 12.34)
+    
+    let items: [Visitable] = [stringThing, intThing, floatThing]
     
     let v = PrintVisitor()
     
