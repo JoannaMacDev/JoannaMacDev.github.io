@@ -109,7 +109,7 @@ extension Thing : Visitable
 }
 ```
 
-If we could use the same code as for visiting non-generic types, then we could test for the type of `self`and simply call the appropriate `visit…` method, passing `self` as the parameter to the method :
+If we could use the same code as for visiting non-generic types, then we could test for the type of `self` and simply call the appropriate `visit…` method, passing `self` as the parameter to the method :
 
 ```swift
 extension Thing : Visitable
