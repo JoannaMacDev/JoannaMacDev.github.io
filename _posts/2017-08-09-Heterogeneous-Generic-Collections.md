@@ -53,8 +53,12 @@ protocol ThingVisitor : Visitor
   func visitStringThing(_ thing: Thing<String>)
   
   func visitIntThing(_ thing: Thing<Int>)
+  
+  func visit<typeT>(_ thing: Thing<typeT>)
 }
 ```
+
+I have also added a generic method for those occassions when the visitor is able to handle its behaviour generically.
 
 At this stage, we have only declared a protocol that defines the group of types that we want to be able to visit. Next we need to create an implementation of that protocol to do the particular task of "pretty printing" each type appropriately :
 
@@ -69,6 +73,11 @@ struct PrintVisitor : ThingVisitor
   func visitIntThing(_ thing: Thing<Int>)
   {
     print("Int with value of \(thing.value)")
+  }
+  
+  func visit<typeT>(_ thing: Thing<typeT>)
+  {
+    print("Thing<\(typeT.self)> with value \(thing.value)")
   }
 }
 ```
@@ -115,6 +124,7 @@ extension Thing : Visitable
           visitor.visitStringThing(self)
         case is Thing<Int>:
           visitor.visitIntThing(self)
+        … // etc
         default:
           break
       }
@@ -123,7 +133,7 @@ extension Thing : Visitable
 }
 ```
 
-Unfortunately, due to Swift's lack of covariance, we are going to need to do a little dance.
+Unfortunately, due to Swift's lack of covariance, this code does not compile and we are going to need to do a little dance to make the compiler happy.
 
 In order to circumvent the lack of native generic covariance, we can add one method and a private initialiser to our generic type :
 
@@ -170,12 +180,14 @@ extension Thing : Visitable
         case is Int.Type:
           visitor.visitIntThing(self.covariantCast())
         default:
-          break
+          visitor.visit(self)
       }
     }
   }
 }
 ```
+
+In the case where we have not specified a specific generic parameter type, the generic `visit` method will be called and we can pass `self` directly instead of having to call the `covariantCast` method.
 
 ### The End Result
 
