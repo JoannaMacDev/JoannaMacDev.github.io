@@ -65,7 +65,7 @@ Very simply, this class does three things:
 
   1. It takes a closure as parameter to the initialiser and holds a reference to it
   2. The invoke(sender:_args:_) method does what it says on the tin and invokes the closure
-  3. It implements Equatable by using the === operator to compare two references the the class based on their identity
+  3. It implements Equatable by using the === operator to compare two references of the class based on their identity
 
 ### The Event
 
