@@ -9,7 +9,7 @@ According to the Swift documentation, it is not possible to have optional method
 
 ### Theoretical Protocol
 
-```swift
+```
 protocol CommandExecution
 {
   func doExecute(Bool) -> Bool
@@ -50,7 +50,7 @@ extension ExecutableCommand
 The syntax for the optional methods may seem a little verbose but it actually comes fairly close to the C++ way of declaring a pure virtual method. Thus the equivalent of our protocol would be an abstract C++ class something like this:
 
 
-```
+```cpp
 class ExecutableCommand
 {
   virtual bool doExecute() = 0
@@ -81,7 +81,7 @@ extension Bool
 
 Now we can write a simple example struct that implements the `ExecutableCommand` protocol
 
-```
+```swift
 struct Command : ExecutableCommand
 {
   func execute()
@@ -107,7 +107,7 @@ Here, we call the optional methods of the protocol in much the same way that we 
 
 Now we need some test code:
 
-```
+```swift
 {
   let command = Command()
   
@@ -120,7 +120,7 @@ Now we need some test code:
 
 This runs fine, demonstrating that calls to the nil optional methods are correctly ignored but, unless we step through the code in the debugger, running this code doesn't really tell us anything about whether executing the Command succeeded or failed. So let's implement the optional methods to write something to the console:
 
-```
+```swift
 struct Command : ExecutableCommand
 {
   func execute()
