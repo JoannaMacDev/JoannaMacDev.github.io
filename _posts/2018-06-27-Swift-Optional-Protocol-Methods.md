@@ -140,18 +140,14 @@ struct Command : ExecutableCommand
     return Bool.random
   }
   
-  var doExecuteFailure: (() -> ())?
+  let doExecuteFailure: (() -> ())? =
   {
-    return {
-             print("Failure")
-           }
+    print("Failure")
   }
   
-  var doExecuteSuccess: (() -> ())?
+  let doExecuteSuccess: (() -> ())? =
   {
-    return {
-             print("Success")
-           }
+    print("Success")
   }
 }
 
