@@ -162,6 +162,8 @@ Unfortunately it would seem that "input" parameters to a closure are implicitly 
 
 ### Attempt 2
 
+Let's change the "sender" parameter to `inout`
+
 ```
 struct Person
 {
