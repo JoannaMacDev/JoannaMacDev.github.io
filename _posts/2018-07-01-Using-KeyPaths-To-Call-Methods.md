@@ -7,7 +7,7 @@ title: Using KeyPaths to Call Methods
 
 Swift uses the concept of KeyPaths to allow access to properties on types like `struct` and `class`; or, to be more accurate, access to stored vars, since computed properties or vars are not included.
 
-So, being of an inquisitive and (some may say) devious nature, I thought, since computed vars are essentially methods, I would investigate whether it were possible too work out how to use KeyPaths to access methods as well.
+So, being of an inquisitive and (some may say) devious nature, I thought, since computed vars are essentially methods, I would investigate whether it were possible to work out how to use KeyPaths to access methods as well.
 
 ### Warning!
 
