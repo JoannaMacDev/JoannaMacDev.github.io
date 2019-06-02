@@ -150,6 +150,16 @@ class PersonCellPresenter : Presenter<Person, PersonCell>, PropertyChangeHandler
   
   lazy var propertyChangeClosure: PropertyChangedEvent<Person>.Closure = .init
   {
+    // for reference :
+    //
+    // PropertyChangedEvent<senderT> : Event<senderT, PropertyChangedEvent.Args>
+    // {
+    //   public struct Args : EventArgs
+    //   {
+    //     public let keyPath: PartialKeyPath<senderT>
+    //   }
+    // }
+     
     sender, args in // (sender: Person, args: PropertyChangedEvent<Person>.Args)
     
     DispatchQueue.main.async
