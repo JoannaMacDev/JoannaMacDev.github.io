@@ -98,7 +98,7 @@ Of course, there are much more useful things we could do, but this will serve as
 
 ### The Base Presenter Class
 
-Following the principles of the Model View Presnter design pattern, we will now need a base presenter class to link the view (cell) to its model :
+Following the principles of the Model View Presenter design pattern, we will now need a base presenter class to link the view (cell) to its model :
 
 ```
 open class Presenter<modelT, viewT : UIView> : NSObject
@@ -118,15 +118,13 @@ open class Presenter<modelT, viewT : UIView> : NSObject
     self.view = view
     
     self.model = model
-    
-    updateView()
   }
   
   open func updateView() { }
 }
 ```
 
-This is then further extended to specialise it to our specific model end cell types :
+This is then further extended to specialise it to our particular model and cell types :
 
 ```
 class PersonCellPresenter : Presenter<Person, PersonCell>, PropertyChangeHandler
@@ -170,7 +168,7 @@ class PersonCellPresenter : Presenter<Person, PersonCell>, PropertyChangeHandler
 }
 ```
 
-You may have noticed that the cell responds to the button tap by calling an optional closure held in the var :
+You may have noticed that the PersonCell class responds to the button tap by calling an optional closure held in the var :
 
 ```
 var buttonTapClosure: (() -> ())?
@@ -180,7 +178,7 @@ The presenter assigns its own closure to that var, thus enabling it to respond t
 
 ### Removing the Data Source Code from the UITableViewController
 
-Usually, the data handling code tends to get put in the `UITableViewController` subclass, simply because the `UITableViewDataSource` is implemented there by default. So we end up with boilerplate code like this in every table view controller we need to specialise to a given model.
+Usually, the data handling code tends to get put in the `UITableViewController` subclass, simply because the `UITableViewDataSource` delegate is implemented there by default. So, because Interface Builder doesn't allow us to use generic view controller classes, we end up with boilerplate code like this in every table view controller we need to specialise to a given model.
 
 ```
   public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -204,7 +202,7 @@ Usually, the data handling code tends to get put in the `UITableViewController` 
 
 This kind of boilerplate code is one of the major causes of Massive View Controller syndrome and it can be so easily avoided by separating the data handling code into a "sub-controller" (in this case)
 
-So, let's start with a generic class that I will call an Interactor, in line with the nomenclature used in the Model View Presenter design pattern, to represent a "sub-controller" that handles one specific part of the overall presenter's work :
+So, let's start with a generic class (that I will call an Interactor, in line with the nomenclature used in the Model View Presenter design pattern) to represent a "sub-controller" that handles one specific part of the overall presenter's work, thus allowing us to write "once only" generic code that can be used in our non-generic `UIViewController` derived class :
 
 ```
 open class TableViewDataSourceInteractor<modelT : Equatable,
@@ -326,11 +324,11 @@ public class CellPresenterCache<itemT, viewT : UITableViewCell, cellPresenterT :
 }
 ```
 
-What is happening here is that we are maintaining a dictionary of presenters, keyed on a cell.
+What is happening here is that we are maintaining a dictionary of presenters, keyed on cells.
 
-Every time the table view retrieves a dequeued cell, it is passed to this cache, where we check whether there is already a presenter for that cell in the dictionary. If not, a new presenter is created, bound to its appropriate model and cell, then added to the dictionary; otherwise an existing presenter will be retrieved and its model will be reassigned to the item at the required index of the model.
+Every time the table view retrieves a dequeued cell, it is passed to this cache, where we check whether there is already an "active" presenter for that cell in the dictionary. If not, a new presenter is created, bound to its appropriate model and cell, then added to the dictionary; otherwise an existing presenter will be retrieved and its model will be reassigned the item at the required index of the model.
 
-So, there we have it, the CellPresenter, a mechanism for allowing us to manage interactions between items in a list and the cell that represent them, without having to put the code in either the table view controller or the cells.
+So, there we have it, the `CellPresenter`, a mechanism for allowing us to manage interactions between items in a list and the cell that represent them, without having to put the code in either the table view controller or the cells; and the `CellPresenterCache` to manage the recycling of presenters, in line with the table view's recycling of cells.
 
 Once the generic code is written and placed in a framework, the only "custom" code required for each specific table view, is for the model, the view (cell) and the presenter.
 
