@@ -148,28 +148,33 @@ class PersonCellPresenter : Presenter<Person, PersonCell>, PropertyChangeHandler
     }
   }
   
-  lazy var propertyChangeClosure: PropertyChangedEvent<Person>.Closure = .init
+  lazy var propertyChangeClosure: PropertyChangedEvent.Closure = .init
   {
     // for reference :
     //
-    // PropertyChangedEvent<senderT> : Event<senderT, PropertyChangedEvent.Args>
+    // PropertyChangedEvent : Event<Any, PropertyChangedEvent.Args>
     // {
     //   public struct Args : EventArgs
     //   {
-    //     public let keyPath: PartialKeyPath<senderT>
+    //     public let keyPath: AnyKeyPath
     //   }
     // }
      
-    sender, args in // (sender: Person, args: PropertyChangedEvent<Person>.Args)
+    sender, args in // (sender: Any, args: PropertyChangedEvent.Args)
+    
+    guard let person = sender as? Person else
+    {
+      return
+    }
     
     DispatchQueue.main.async
     {
       switch args.keyPath
       {
         case \Person.name:
-          self.view.nameLabel.text = sender.name
+          self.view.nameLabel.text = person.name
         case \Person.age:
-          self.view.ageLabel.text = String(sender.age)
+          self.view.ageLabel.text = String(person.age)
         default:
           break
       }
