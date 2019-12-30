@@ -5,7 +5,7 @@ title: Property Wrappers and Multiple Attributes
 
 ### Introduction
 
-Ever since leaving C# behind, I have missed the concept of Attributes for types, methods and properties. Slowly but surely, Swift has started to add very limited functionality in this area, especially from a custom attributes poit of view; but even then, we are limited to Property Wrapper Attributes and then only one attribute per property. This article seeks to explain a way to provide multiple attributes for one property, using existing Swift mechanisms.  
+Ever since leaving C# behind, I have missed the concept of Attributes for types, methods and properties. Slowly but surely, Swift has started to add very limited functionality in this area, especially from a custom attributes point of view; but even then, we are limited to Property Wrapper Attributes and then only one attribute per property. This article seeks to explain a way to provide multiple attributes for one property, using existing Swift mechanisms.  
 
 ### It All Starts With a Protocol
 
