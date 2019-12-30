@@ -65,7 +65,7 @@ struct Attributes<typeT>
 }
 ```
 
-Now we need to a way of holding on to the attributes that we want to attach to a given property:
+Now we need to add a way of holding on to the attributes that we want to attach to a given property:
 
 ```
 @propertyWrapper
