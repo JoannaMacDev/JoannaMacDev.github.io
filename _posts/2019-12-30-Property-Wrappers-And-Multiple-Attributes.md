@@ -5,6 +5,10 @@ title: Property Wrappers and Multiple Attributes
 
 ### Introduction
 
+So, what are attributes and why would we need them? Well, in C#, they can be used to add extra metadata to types, properties and functions, which can then be used to supplement the information available when using the reflection APIs.
+
+For example, for a given type, we can add an attribute to the type that provides a user-friendly description or we can provide a unique identifier for the type, instead of adding a static property. We can mark a property as being required to have a value, or that it has to hold a unique value.
+
 Ever since leaving C# behind, I have missed the concept of Attributes for types, methods and properties. Slowly but surely, Swift has started to add very limited functionality in this area, especially from a custom attributes point of view; but even then, we are limited to Property Wrapper Attributes and then only one attribute per property. This article seeks to explain a way to provide multiple attributes for one property, using existing Swift mechanisms.  
 
 ### It All Starts With a Protocol
