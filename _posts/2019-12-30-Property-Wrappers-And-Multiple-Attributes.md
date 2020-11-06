@@ -258,7 +258,7 @@ Here's some sample test code:
   
   print(person.validate()) // false
   
-  person.lastName = "`Jobs`"
+  person.lastName = "Jobs"
   
   print(person.validate()) // false
   
@@ -276,4 +276,4 @@ Here's some sample test code:
 
 This article has discussed how to create a mechanism that allows multiple attributes to be applied to a single property by means of a property wrapper that can contain a list of attributes.
 
-The hope is taht Swift will evolve to a point where such workarounds are no longer necessary. You can contact me via Twitter on @JoannaMacDev with any reactions or comments. 
+The hope is that Swift will evolve to a point where such workarounds are no longer necessary. You can contact me via Twitter on @JoannaMacDev with any reactions or comments. 
